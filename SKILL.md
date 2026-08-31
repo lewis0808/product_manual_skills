@@ -39,6 +39,7 @@ description: 为用户已写好的 Web 平台/产品生成用户使用说明书�
 
 - 输出路径默认 `<产品目录>/docs/user-manual.html`，或用户指定位置。
 - 复制 `assets/manual-template.html` 为起点，同时把 `assets/logo.png` 复制到说明书 HTML 同目录（封面引用的是 `logo.png` 相对路径；若放别处需改 src）。用 Edit 逐个章节填入真实内容。模板结构：封面 → 修订记录 → 目录 → 阅读约定与名词解释 → 产品概述 → 快速上手 → 各端/功能章节 → FAQ → 附录。
+- 目录条目保留 `<span class="toc-pageno"></span>` 占位（留空即可），转 PDF 时脚本自动回填页码；新增/删除目录条目时按模板同款格式写 `<span class="t"><a href="#id">标题</a><span class="toc-pageno"></span></span>`。
 - 内容面向最终用户，写"点哪里、看到什么、注意什么"，不写实现细节。界面上的菜单名、按钮名、表格列名以线上截图看到的为准。
 - 把第 1 步截好的截图直接引用进来（相对路径 `assets/screenshots/xxx.png`），替换模板里的 `screenshot-placeholder` 占位块；页面上需要演示但没截到的操作，补截或保留占位符让用户自行替换。
 - 生成完只告诉用户文件路径和章节清单，不贴代码。
@@ -56,7 +57,7 @@ HTML 生成后，问用户：
 
 ## 脚本
 
-`scripts/html_to_pdf.py` — 自动查找本机 Chrome 或 Edge，无头模式打印为 PDF（A4、含背景色、无边距问题已处理）。用法：
+`scripts/html_to_pdf.py` — 自动查找本机 Chrome 或 Edge，无头模式打印为 PDF（A4、含背景色、无边距问题已处理）。**转 PDF 时会自动探测目录各章节的实际页码并回填进 HTML**（依赖模板目录里的 `<span class="toc-pageno">` 占位，生成/修改 HTML 时不要删掉它；页码为 PDF 绝对页码，封面 = 第 1 页）。用法：
 
 ```bash
 python scripts/html_to_pdf.py manual.html            # 输出 manual.pdf

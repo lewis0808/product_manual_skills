@@ -79,12 +79,14 @@
   b, strong { font-weight: 600; }
 
   /* ================= 目录 ================= */
+  /* 每行 = 标题 + 点线 + 页码；页码留空即可，html_to_pdf.py 转 PDF 时自动回填 */
   .toc ol { list-style: none; margin-left: 0; }
   .toc > ol > li { font-size: 15px; font-weight: 600; margin: 12px 0; }
-  .toc > ol > li > .t { display: flex; align-items: baseline; }
-  .toc > ol > li > .t::after { content: ""; flex: 1; border-bottom: 1px dotted var(--line); margin-left: 8px; }
   .toc ol ol { margin: 4px 0 4px 20px; }
   .toc ol ol li { font-size: 13px; font-weight: 400; color: var(--gray); margin: 2px 0; }
+  .toc .t { display: flex; align-items: baseline; }
+  .toc .t::after { content: ""; flex: 1; order: 1; border-bottom: 1px dotted var(--line); margin: 0 8px; }
+  .toc .toc-pageno { order: 2; min-width: 2em; text-align: right; font-variant-numeric: tabular-nums; }
   .toc a { color: inherit; text-decoration: none; }
 
   /* ================= 表格 ================= */
@@ -182,19 +184,21 @@
 <!-- ==================== 目录 ==================== -->
 <section class="chapter toc" id="toc">
   <div class="chapter-head"><span class="num">·</span><h2>目录</h2></div>
+  <!-- 目录页码：<span class="toc-pageno"> 留空即可，
+       scripts/html_to_pdf.py 转 PDF 时会自动探测并回填（PDF 绝对页码，封面 = 第 1 页） -->
   <ol>
-    <li><span class="t"><a href="#conventions">阅读约定与名词解释</a></span></li>
-    <li><span class="t"><a href="#overview">产品概述</a></span></li>
-    <li><span class="t"><a href="#quickstart">快速上手</a></span></li>
-    <li><span class="t"><a href="#pc">PC 管理端</a></span>
+    <li><span class="t"><a href="#conventions">阅读约定与名词解释</a><span class="toc-pageno"></span></span></li>
+    <li><span class="t"><a href="#overview">产品概述</a><span class="toc-pageno"></span></span></li>
+    <li><span class="t"><a href="#quickstart">快速上手</a><span class="toc-pageno"></span></span></li>
+    <li><span class="t"><a href="#pc">PC 管理端</a><span class="toc-pageno"></span></span>
       <ol>
-        <li><a href="#pc-1">{{功能模块一}}</a></li>
-        <li><a href="#pc-2">{{功能模块二}}</a></li>
+        <li><span class="t"><a href="#pc-1">{{功能模块一}}</a><span class="toc-pageno"></span></span></li>
+        <li><span class="t"><a href="#pc-2">{{功能模块二}}</a><span class="toc-pageno"></span></span></li>
       </ol>
     </li>
-    <li><span class="t"><a href="#mobile">移动端</a></span></li>
-    <li><span class="t"><a href="#faq">常见问题</a></span></li>
-    <li><span class="t"><a href="#appendix">附录</a></span></li>
+    <li><span class="t"><a href="#mobile">移动端</a><span class="toc-pageno"></span></span></li>
+    <li><span class="t"><a href="#faq">常见问题</a><span class="toc-pageno"></span></span></li>
+    <li><span class="t"><a href="#appendix">附录</a><span class="toc-pageno"></span></span></li>
   </ol>
   <!--
     目录划分原则（定稿后删除本注释）：

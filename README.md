@@ -11,7 +11,7 @@ product-manual/
 │   ├── manual-template.html    # 说明书模板（封面/修订记录/目录/章节/FAQ，打印友好）
 │   └── logo.png                # 公司 logo，封面引用
 └── scripts/
-    ├── html_to_pdf.py          # HTML → PDF（本机 Chrome/Edge 无头打印，零依赖）
+    ├── html_to_pdf.py          # HTML → PDF（本机 Chrome/Edge 无头打印，零依赖；自动回填目录页码）
     ├── screenshot.mjs          # 网页自动截图（puppeteer-core + 本机 Chrome/Edge）
     └── node_modules/           # screenshot.mjs 的依赖（已安装，勿删）
 ```
@@ -74,4 +74,5 @@ python product-manual/scripts/html_to_pdf.py 说明书.html out/a.pdf  # 指定�
 - 按钮统一写【按钮】，系统提示统一写"提示语"，截图上的标注用 ①②③ 与步骤对应
 - 同一功能的多步操作建议拼成一张竖向**长图**（圈出按钮位置），对应步骤列表
 - 修订记录每次更新必须登记，手册版本与系统版本对应
+- 目录条目里的 `<span class="toc-pageno">` 占位不要删：`html_to_pdf.py` 转 PDF 时会自动探测各章节实际页码并回填（PDF 绝对页码，封面 = 第 1 页）
 - 复制模板时把 `logo.png` 一并复制到说明书同目录（封面按相对路径引用）
