@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{产品名称}} 用户使用说明书</title>
+<style>
+  /* ============================================================
+     复制本模板到产品目录时，请把 logo.png 一并复制或修正 src 路径
+     ============================================================ */
+  :root {
+    --blue: #1d5f9e;
+    --blue-dark: #154a7e;
+    --blue-soft: #eef4fa;
+    --ink: #262626;
+    --gray: #737373;
+    --line: #dcdfe4;
+    --red: #c0392b;
+    --green: #1e8449;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body {
+    font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+    color: var(--ink);
+    font-size: 14px;
+    line-height: 1.9;
+  }
+
+  /* ================= 封面 ================= */
+  .cover {
+    height: 97vh;
+    page-break-after: always;
+    display: flex;
+    flex-direction: column;
+    padding: 60px 72px;
+  }
+  .cover .logo { width: 220px; }
+  .cover .cover-body { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+  .cover .doc-type {
+    display: inline-block;
+    font-size: 15px;
+    color: var(--blue);
+    letter-spacing: 6px;
+    border: 1px solid var(--blue);
+    padding: 4px 18px 4px 24px;
+    margin-bottom: 28px;
+    width: fit-content;
+  }
+  .cover h1 { font-size: 44px; font-weight: 700; letter-spacing: 2px; }
+  .cover .en { color: var(--gray); font-size: 15px; letter-spacing: 3px; margin-top: 6px; }
+  .cover .bar { width: 72px; height: 5px; background: var(--blue); margin: 34px 0; }
+  .cover .meta { color: var(--gray); font-size: 13px; line-height: 2.2; }
+  .cover .meta b { color: var(--ink); font-weight: 600; display: inline-block; min-width: 88px; }
+  .cover .cover-foot {
+    border-top: 1px solid var(--line);
+    padding-top: 14px;
+    font-size: 12px;
+    color: var(--gray);
+    display: flex;
+    justify-content: space-between;
+  }
+
+  /* ================= 页面 ================= */
+  .page { max-width: 800px; margin: 0 auto; padding: 40px 48px 64px; }
+  section.chapter { page-break-before: always; }
+  section.chapter:first-of-type { page-break-before: avoid; }
+
+  /* 章标题：大号编号 + 标题 */
+  .chapter-head { display: flex; align-items: baseline; gap: 14px; border-bottom: 2px solid var(--ink); padding-bottom: 10px; margin-bottom: 24px; }
+  .chapter-head .num { font-size: 34px; font-weight: 700; color: var(--blue); line-height: 1; }
+  .chapter-head h2 { font-size: 22px; font-weight: 700; letter-spacing: 1px; }
+
+  h3 { font-size: 16px; margin: 26px 0 8px; padding-left: 10px; border-left: 4px solid var(--blue); }
+  h4 { font-size: 14.5px; margin: 18px 0 6px; }
+  p { margin: 8px 0; }
+  ul, ol { margin: 8px 0 8px 24px; }
+  li { margin: 3px 0; }
+  b, strong { font-weight: 600; }
+
+  /* ================= 目录 ================= */
+  .toc ol { list-style: none; margin-left: 0; }
+  .toc > ol > li { font-size: 15px; font-weight: 600; margin: 12px 0; }
+  .toc > ol > li > .t { display: flex; align-items: baseline; }
+  .toc > ol > li > .t::after { content: ""; flex: 1; border-bottom: 1px dotted var(--line); margin-left: 8px; }
+  .toc ol ol { margin: 4px 0 4px 20px; }
+  .toc ol ol li { font-size: 13px; font-weight: 400; color: var(--gray); margin: 2px 0; }
+  .toc a { color: inherit; text-decoration: none; }
+
+  /* ================= 表格 ================= */
+  table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 13px; }
+  th, td { border: 1px solid var(--line); padding: 8px 12px; text-align: left; vertical-align: top; }
+  th { background: var(--blue-soft); font-weight: 600; }
+
+  /* ================= 操作步骤 ================= */
+  /* 编号步骤：一步一行，按钮用【】，系统提示用""（全手册统一） */
+  ol.steps { list-style: none; counter-reset: step; margin-left: 0; }
+  ol.steps > li { counter-increment: step; position: relative; padding-left: 38px; margin: 10px 0; }
+  ol.steps > li::before {
+    content: counter(step);
+    position: absolute; left: 0; top: 4px;
+    width: 22px; height: 22px; border-radius: 50%;
+    background: var(--blue); color: #fff;
+    font-size: 12px; font-weight: 700;
+    text-align: center; line-height: 22px;
+  }
+
+  /* ================= 提示块 ================= */
+  .note, .warn, .tip { margin: 12px 0; padding: 10px 14px; font-size: 13px; border-radius: 4px; }
+  .note { background: var(--blue-soft); border-left: 4px solid var(--blue); }
+  .warn { background: #fdf1ef; border-left: 4px solid var(--red); }
+  .tip  { background: #eff8f2; border-left: 4px solid var(--green); }
+  .note::before { content: "说明　"; font-weight: 700; color: var(--blue); }
+  .warn::before { content: "注意　"; font-weight: 700; color: var(--red); }
+  .tip::before  { content: "提示　"; font-weight: 700; color: var(--green); }
+
+  /* ================= 图片 ================= */
+  figure { margin: 16px 0; text-align: center; page-break-inside: avoid; }
+  figure img { max-width: 100%; border: 1px solid var(--line); border-radius: 4px; }
+  figcaption { font-size: 12px; color: var(--gray); margin-top: 6px; }
+
+  /*
+    截图占位：替换为 <img src="screenshots/xxx.png" alt="..."> 后整块删掉。
+    长图建议：把同一功能的多个操作步骤拼成一张竖向长图（图上圈出按钮、标①②③），
+    对应下方步骤列表，文档里不留白，客服也可直接转发。
+  */
+  .img-placeholder {
+    border: 1.5px dashed var(--line);
+    border-radius: 4px;
+    padding: 40px 16px;
+    color: var(--gray);
+    font-size: 13px;
+    background: #fafbfc;
+  }
+
+  code { background: #f4f5f7; border: 1px solid var(--line); border-radius: 3px; padding: 1px 6px; font-family: Consolas, monospace; font-size: 12.5px; }
+
+  /* ================= 打印 ================= */
+  @page { size: A4; margin: 16mm 15mm; }
+  @media print {
+    body { font-size: 12px; }
+    .cover { height: 100vh; }
+    h3, h4, figure, table, .note, .warn, .tip { page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ==================== 封面 ==================== -->
+<div class="cover">
+  <img class="logo" src="logo.png" alt="公司 LOGO">
+  <div class="cover-body">
+    <span class="doc-type">用户使用说明书</span>
+    <h1>{{产品名称}}</h1>
+    <div class="en">{{PRODUCT NAME}} USER MANUAL</div>
+    <div class="bar"></div>
+    <div class="meta">
+      <div><b>手册版本</b>V{{1.0}}（对应系统版本 V{{x.y}}）</div>
+      <div><b>适用对象</b>{{系统管理员 / 操作员 / 普通用户}}</div>
+      <div><b>编写日期</b>{{YYYY-MM-DD}}</div>
+    </div>
+  </div>
+  <div class="cover-foot">
+    <span>{{公司全称}}</span>
+    <span>本文档面向系统使用人员，请勿外传</span>
+  </div>
+</div>
+
+<div class="page">
+
+<!-- ==================== 修订记录（版本管理：每次更新必须登记） ==================== -->
+<section class="chapter" id="revision">
+  <div class="chapter-head"><span class="num">0</span><h2>修订记录</h2></div>
+  <div class="note">每次手册更新必须在此登记。手册版本与系统版本对应记录，便于核对手册与线上系统的差异。</div>
+  <table>
+    <tr><th style="width:90px">手册版本</th><th style="width:110px">对应系统版本</th><th style="width:80px">更改人</th><th style="width:100px">更改时间</th><th>更改内容</th><th style="width:80px">审核人</th></tr>
+    <tr><td>V1.0</td><td>V{{x.y}}</td><td>{{姓名}}</td><td>{{YYYY-MM-DD}}</td><td>首次发布</td><td>{{姓名}}</td></tr>
+    <tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+  </table>
+</section>
+
+<!-- ==================== 目录 ==================== -->
+<section class="chapter toc" id="toc">
+  <div class="chapter-head"><span class="num">·</span><h2>目录</h2></div>
+  <ol>
+    <li><span class="t"><a href="#conventions">阅读约定与名词解释</a></span></li>
+    <li><span class="t"><a href="#overview">产品概述</a></span></li>
+    <li><span class="t"><a href="#quickstart">快速上手</a></span></li>
+    <li><span class="t"><a href="#pc">PC 管理端</a></span>
+      <ol>
+        <li><a href="#pc-1">{{功能模块一}}</a></li>
+        <li><a href="#pc-2">{{功能模块二}}</a></li>
+      </ol>
+    </li>
+    <li><span class="t"><a href="#mobile">移动端</a></span></li>
+    <li><span class="t"><a href="#faq">常见问题</a></span></li>
+    <li><span class="t"><a href="#appendix">附录</a></span></li>
+  </ol>
+  <!--
+    目录划分原则（定稿后删除本注释）：
+    - 按"使用人 + 端"划分一级目录：PC 管理端给管理员/操作员，移动端给普通用户。
+      摘出某角色的章节即可形成该角色的手册版本，无需单独重写。
+    - 若同一功能两端都能完成，则按功能划分，不按端划分。
+    - 功能琐碎的系统可按"事项"划分（如"信息发布"整体一章：上传→审核→发布）。
+  -->
+</section>
+
+<!-- ==================== 1. 阅读约定与名词解释 ==================== -->
+<section class="chapter" id="conventions">
+  <div class="chapter-head"><span class="num">1</span><h2>阅读约定与名词解释</h2></div>
+
+  <h3>1.1 表达约定</h3>
+  <table>
+    <tr><th style="width:140px">写法</th><th>含义</th><th style="width:220px">示例</th></tr>
+    <tr><td>【按钮】</td><td>界面上的按钮、菜单、页签</td><td>点击【提交】</td></tr>
+    <tr><td>"提示语"</td><td>系统弹出的提示文字</td><td>提示"保存成功"</td></tr>
+    <tr><td><code>代码/网址</code></td><td>访问地址、固定值</td><td><code>https://example.com</code></td></tr>
+    <tr><td>① ② ③</td><td>截图上的位置标注，与步骤序号对应</td><td>点击图中 ① 处【新增】</td></tr>
+  </table>
+
+  <h3>1.2 名词解释</h3>
+  <div class="note">系统专有名词在此统一说明。很多问题源于不理解概念，使用前请先阅读本节。</div>
+  <table>
+    <tr><th style="width:140px">名词</th><th>含义</th></tr>
+    <tr><td>{{专有名词}}</td><td>{{解释。如："更新时间"指本页面数据最后一次被任何途径修改的时间，含其它页面联动修改。}}</td></tr>
+  </table>
+</section>
+
+<!-- ==================== 2. 产品概述 ==================== -->
+<section class="chapter" id="overview">
+  <div class="chapter-head"><span class="num">2</span><h2>产品概述</h2></div>
+  <p>{{一段话说明：系统是什么、为什么有它、谁在用。要求其它业务线的人一看就懂。}}</p>
+
+  <h3>2.1 主要功能</h3>
+  <table>
+    <tr><th style="width:160px">功能模块</th><th>说明</th><th style="width:120px">使用角色</th></tr>
+    <tr><td>{{模块A}}</td><td>{{一句话说明做什么}}</td><td>{{管理员}}</td></tr>
+    <tr><td>{{模块B}}</td><td>{{一句话说明做什么}}</td><td>{{操作员}}</td></tr>
+  </table>
+
+  <h3>2.2 整体业务流程</h3>
+  <!-- 流程复杂时用流程图辅助说明；可用截图/绘图工具导出 png 放这里 -->
+  <figure>
+    <div class="img-placeholder">【流程图：整体业务流程，如 信息上传 → 审核 → 发布 → 前端展示】</div>
+    <figcaption>图 2-1 整体业务流程</figcaption>
+  </figure>
+
+  <h3>2.3 运行环境</h3>
+  <table>
+    <tr><th style="width:140px">项目</th><th>说明</th></tr>
+    <tr><td>访问地址</td><td><code>{{https://example.com}}</code></td></tr>
+    <tr><td>推荐浏览器</td><td>Chrome / Edge 最新版本</td></tr>
+    <tr><td>账号获取</td><td>{{由谁开通、如何开通}}</td></tr>
+  </table>
+</section>
+
+<!-- ==================== 3. 快速上手 ==================== -->
+<section class="chapter" id="quickstart">
+  <div class="chapter-head"><span class="num">3</span><h2>快速上手</h2></div>
+  <p>完成一次最核心的操作，建立对系统的整体印象。详细规则见后续章节。</p>
+  <ol class="steps">
+    <li>浏览器访问 <code>{{地址}}</code>，输入账号密码，点击【登录】。</li>
+    <li>{{核心操作第二步}}</li>
+    <li>{{核心操作第三步，看到什么结果}}</li>
+  </ol>
+  <figure>
+    <div class="img-placeholder">【截图：登录后首页，圈出主要区域】</div>
+    <figcaption>图 3-1 系统首页</figcaption>
+  </figure>
+  <div class="tip">首次登录建议先在【个人中心】修改初始密码。</div>
+</section>
+
+<!-- ==================== 4. PC 管理端（功能章节样板，每个模块复制一个 chapter） ==================== -->
+<section class="chapter" id="pc">
+  <div class="chapter-head"><span class="num">4</span><h2>PC 管理端</h2></div>
+
+  <!-- 每个功能模块：先"功能概述"（干什么、谁能用、分几步），再"操作步骤"（点哪里、填什么、注意什么） -->
+  <h3 id="pc-1">4.1 {{功能模块一}}</h3>
+  <p><b>功能说明：</b>{{这个功能是干什么的，解决什么问题。}}</p>
+  <p><b>使用角色：</b>{{管理员}}　　<b>操作入口：</b>【菜单】→【子菜单】</p>
+
+  <h4>操作步骤</h4>
+  <ol class="steps">
+    <li>进入【{{菜单}}】页面，点击右上角【{{新增}}】（下图 ① 处）。</li>
+    <li>在弹窗中填写{{字段}}：{{填写规则，会影响哪里}}（下图 ② 处）。</li>
+    <li>点击【{{保存}}】，提示"{{保存成功}}"即完成。</li>
+  </ol>
+  <!-- 长图：同一功能的多步操作拼成一张竖向长图，圈出按钮位置并标①②③ -->
+  <figure>
+    <div class="img-placeholder">【操作长图：步骤 1-3 对应界面，圈出按钮并标注 ① ② ③】</div>
+    <figcaption>图 4-1 {{功能模块一}}操作流程</figcaption>
+  </figure>
+
+  <h4>字段说明</h4>
+  <!-- 字段含义一目了然的不用列；只解释容易混淆、或影响其它页面的字段 -->
+  <table>
+    <tr><th style="width:140px">字段</th><th>说明</th></tr>
+    <tr><td>{{字段名}}</td><td>{{含义、填写规则、对其它页面的影响}}</td></tr>
+  </table>
+  <div class="warn">{{易错点 / 权限限制 / 不可逆操作说明}}</div>
+
+  <h3 id="pc-2">4.2 {{功能模块二}}</h3>
+  <p>{{同上结构：功能说明 → 操作步骤 → 长图 → 字段说明 → 注意事项}}</p>
+</section>
+
+<!-- ==================== 5. 移动端 ==================== -->
+<section class="chapter" id="mobile">
+  <div class="chapter-head"><span class="num">5</span><h2>移动端</h2></div>
+  <p>{{移动端面向的角色与功能范围；若功能与 PC 端重复，写"操作同 4.x 节"，避免重复维护。}}</p>
+</section>
+
+<!-- ==================== 6. 常见问题 ==================== -->
+<section class="chapter" id="faq">
+  <div class="chapter-head"><span class="num">6</span><h2>常见问题</h2></div>
+  <h4>Q1：{{用户最常问的问题}}？</h4>
+  <p>A：{{解答，涉及操作的写明路径}}</p>
+  <h4>Q2：{{问题}}？</h4>
+  <p>A：{{解答}}</p>
+</section>
+
+<!-- ==================== 7. 附录 ==================== -->
+<section class="chapter" id="appendix">
+  <div class="chapter-head"><span class="num">7</span><h2>附录</h2></div>
+  <h3>7.1 技术支持</h3>
+  <table>
+    <tr><th style="width:140px">渠道</th><th>联系方式</th></tr>
+    <tr><td>技术支持</td><td>{{邮箱 / 电话 / 群}}</td></tr>
+    <tr><td>问题反馈</td><td>{{入口}}</td></tr>
+  </table>
+</section>
+
+</div>
+</body>
+</html>
