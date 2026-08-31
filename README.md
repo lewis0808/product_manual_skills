@@ -1,6 +1,6 @@
 # product-manual 使用说明书生成 Skill
 
-为一个已有的 Web 平台自动生成**用户使用说明书**：读代码 + 访问线上页面自动截图 → 产出单文件 HTML（可直接修改）→ 按需转 PDF。
+为一个已有的 Web 平台或 Windows 桌面软件（exe）生成**用户使用说明书**：读代码 + 查看实际界面并截图 → 产出单文件 HTML（可直接修改）→ 按需转 PDF（自动回填目录页码）。
 
 ## 目录结构
 
@@ -13,6 +13,7 @@ product-manual/
 └── scripts/
     ├── html_to_pdf.py          # HTML → PDF（本机 Chrome/Edge 无头打印，零依赖；自动回填目录页码）
     ├── screenshot.mjs          # 网页自动截图（puppeteer-core + 本机 Chrome/Edge）
+    ├── screenshot_window.ps1   # exe 桌面软件截图（截前台窗口/全屏，Windows 自带 PowerShell）
     └── node_modules/           # screenshot.mjs 的依赖（已安装，勿删）
 ```
 
@@ -21,12 +22,14 @@ product-manual/
 把 `product-manual/` 作为项目级 skill 放到项目的 skills 目录下（或当前工作目录）。之后直接对 AI 说：
 
 > 给 XX 系统生成使用说明书，访问地址是 https://xxx
+> 给 XX 软件生成使用说明书，是个 exe 桌面程序
 
 AI 会自动按 SKILL.md 的流程执行：
 
-1. **收集信息**：读项目代码整理功能模块和页面 URL 清单，只问你代码里挖不到的信息
-2. **看线上页面 + 截图**：用 `screenshot.mjs` 逐页截图并查看，菜单文案、按钮名以线上实际页面为准
-   - 需要登录的系统：脚本会弹出真实浏览器让你**手动登录一次**，登录态保存后所有内页自动截
+1. **收集信息**：读项目代码整理功能模块清单（Web 读路由/菜单，exe 读窗体/界面定义），只问你代码里挖不到的信息
+2. **看实际界面 + 截图**：菜单文案、按钮名以实际界面为准
+   - Web：用 `screenshot.mjs` 逐页截图；需要登录的系统会弹出真实浏览器让你**手动登录一次**，登录态保存后所有内页自动截
+   - exe：AI 无法替你操作软件，用 `screenshot_window.ps1` 逐个界面截图——AI 运行截图命令后，你在倒计时内把软件窗口切到前台即可
 3. **生成 HTML**：基于模板填充内容，截图直接复用进说明书，输出到产品目录（如 `docs/user-manual.html`）
 4. **转 PDF 前会询问**：你一般还要修改 HTML，可选择让 AI 立即转，或改完后自己跑脚本
 
@@ -57,13 +60,25 @@ python product-manual/scripts/html_to_pdf.py 说明书.html            # 输出�
 python product-manual/scripts/html_to_pdf.py 说明书.html out/a.pdf  # 指定输出路径
 ```
 
-> 注意：**转 PDF 统一用脚本，不要用浏览器 Ctrl+P**——浏览器打印会自带页眉页脚（URL 和日期），脚本已去除。
+> 注意：**转 PDF 统一用脚本，不要用浏览器 Ctrl+P**——浏览器打印会自带页眉页脚（URL 和日期），脚本已去除。脚本还会自动探测目录各章节页码并回填。
+
+### exe 桌面软件截图（仅 Windows）
+
+```bash
+# 倒计时 5 秒后截取前台窗口（执行后把软件目标窗口切到前台）
+powershell -ExecutionPolicy Bypass -File product-manual/scripts/screenshot_window.ps1 out.png
+
+# 自定义倒计时 / 截全屏（菜单展开、多窗口同屏等场景）
+powershell -ExecutionPolicy Bypass -File product-manual/scripts/screenshot_window.ps1 out.png -Delay 8
+powershell -ExecutionPolicy Bypass -File product-manual/scripts/screenshot_window.ps1 out.png -Full
+```
 
 ## 环境要求
 
-- 本机安装 Chrome 或 Edge（两个脚本都靠它，自动查找）
+- 本机安装 Chrome 或 Edge（网页截图和转 PDF 都靠它，自动查找）
 - Python 3（转 PDF 用）
-- Node.js（截图用；`scripts/node_modules` 已含 puppeteer-core，换机器需重装：`cd scripts && npm install`）
+- Node.js（网页截图用；`scripts/node_modules` 已含 puppeteer-core，换机器需重装：`cd scripts && npm install`）
+- Windows PowerShell（exe 桌面软件截图用，系统自带）
 
 ## 模板说明
 
